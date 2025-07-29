@@ -1,0 +1,26 @@
+{
+  "name": "agentos-llmo",
+  "version": "1.0.0",
+  "description": "AgentOS LLMO - AI Visibility & LLM Optimization Platform",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build",
+    "start:prod": "cd backend && npm start",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "optimization",
+    "saas",
+    "visibility"
+  ],
+  "author": "",
+  "license": "ISC"
+}
