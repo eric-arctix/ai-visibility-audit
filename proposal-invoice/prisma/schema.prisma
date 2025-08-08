@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  company   String?
+  phone     String?
+  address   String?
+  proposals Proposal[]
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Brand {
+  id           String   @id @default(cuid())
+  companyName  String
+  logoUrl      String?
+  colorPrimary String   @default("#2563EB")
+  colorSecondary String @default("#0EA5E9")
+  colorAccent  String   @default("#F59E0B")
+  colorNeutral String   @default("#111827")
+  emailFrom    String?
+  address      String?
+  website      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Template {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  cover       String?
+  intro       String
+  scope       String
+  timeline    String
+  deliverables String
+  terms       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Proposal {
+  id           String   @id @default(cuid())
+  client       Client   @relation(fields: [clientId], references: [id])
+  clientId     String
+  title        String
+  intro        String
+  scope        String
+  timeline     String
+  deliverables String
+  terms        String
+  status       String   @default("draft")
+  total        Float
+  currency     String   @default("USD")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  invoice      Invoice?
+}
+
+model Invoice {
+  id          String     @id @default(cuid())
+  client      Client     @relation(fields: [clientId], references: [id])
+  clientId    String
+  proposal    Proposal?  @relation(fields: [proposalId], references: [id])
+  proposalId  String?    @unique
+  issueDate   DateTime   @default(now())
+  dueDate     DateTime
+  status      String     @default("unpaid")
+  subtotal    Float
+  tax         Float
+  total       Float
+  currency    String     @default("USD")
+  lineItems   LineItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model LineItem {
+  id          String   @id @default(cuid())
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  invoiceId   String
+  description String
+  quantity    Int      @default(1)
+  unitPrice   Float
+  total       Float
+}
